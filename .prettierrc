@@ -7,5 +7,24 @@
   "trailingComma": "es5",
   "bracketSpacing": true,
   "arrowParens": "always",
-  "endOfLine": "crlf"
+  "endOfLine": "crlf",
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "^react$",
+    "<THIRD_PARTY_MODULES>",
+    "^@mui/(.*)$",
+    ".*/api/.*$",
+    ".*/helpers/.*$",
+    ".*/lib/.*$",
+    ".*/components/.*$",
+    ".*/contexts/.*$",
+    ".*/models/.*$",
+    ".*/enums/.*$",
+    ".*/resources/.*$",
+    "^[./]",
+    "^(.*).css$",
+    "^(.*).scss$"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }
