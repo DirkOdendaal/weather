@@ -1,11 +1,15 @@
-import React from "react";
+import React, { FC } from "react";
 
 import { AppBar, Toolbar, Typography } from "@mui/material";
 
-const Header = () => (
+/**
+ * Header component
+ * @returns Header component
+ */
+const Header: FC = () => (
   <AppBar>
     <Toolbar>
-      <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
+      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
         Weather
       </Typography>
     </Toolbar>

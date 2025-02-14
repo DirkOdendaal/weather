@@ -27,5 +27,5 @@ export interface WeatherConditions {
   };
   timezone: number;
   dt: number;
+  dt_txt: string;
 }
-

@@ -1,51 +1,45 @@
 import React, { FC } from "react";
 
-import { Stack, Typography } from "@mui/material";
+import { Location } from "@/interfaces/Location";
+import { WeatherConditions } from "@/interfaces/WeatherConditions";
+import axios from "axios";
+import Image from "next/image";
 
+import { Paper, Stack, Typography } from "@mui/material";
+
+/**
+ * Current weather component.
+ * @returns the current weather component.
+ */
 const CurrentWeather: FC = async () => {
-  const weather = {
-    coord: { lon: 5.4171, lat: 52.1188 },
-    weather: [{ id: 800, main: "Clear", description: "clear sky", icon: "01d" }],
-    base: "stations",
-    main: {
-      temp: 3.33,
-      feels_like: 3.33,
-      temp_min: 3.33,
-      temp_max: 3.33,
-      pressure: 1022,
-      humidity: 66,
-      sea_level: 1022,
-      grnd_level: 1021,
-    },
-    visibility: 10000,
-    wind: { speed: 1.33, deg: 273, gust: 1.32 },
-    clouds: { all: 2 },
-    dt: 1737292450,
-    sys: {
-      type: 2,
-      id: 265550,
-      country: "NL",
-      sunrise: 1737272156,
-      sunset: 1737302510,
-    },
-    timezone: 3600,
-    id: 2751688,
-    name: "Gemeente Leusden",
-    cod: 200,
-  };
+  const locationResponse = (await axios.get<Array<Location>>("http://localhost:3000/api/location?cityName=Leusden"))
+    .data;
+
+  const weather: WeatherConditions = await (
+    await axios.get(`http://localhost:3000/api/weather?lat=${locationResponse[0].lat}&lon=${locationResponse[0].lon}`)
+  ).data;
 
   return (
-    <Stack justifyContent={"center"} alignItems={"center"} padding={2}>
-      <Typography variant="h4">{weather.name}</Typography>
-      <Typography variant="h6">{weather.weather[0].description}</Typography>
-      <Typography variant="h4">{weather.main.temp.toFixed(0)}°C</Typography>
-      <Typography variant="h4">
-        {weather.main.temp_min.toFixed(0)}/{weather.main.temp_max.toFixed(0)}°
-      </Typography>
-      <Typography variant="h4">Feels like {weather.main.feels_like.toFixed(0)}°</Typography>
-    </Stack>
+    <Paper elevation={3} sx={{ padding: 2, margin: 1 }}>
+      <Stack justifyContent={"center"} alignItems={"center"} spacing={1}>
+        <Typography variant="h4">{locationResponse[0].name}</Typography>
+        <Image
+          src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`}
+          width={100}
+          height={100}
+          alt={weather.weather[0].description}
+        />
+        <Typography variant="h4">{weather.main.temp.toFixed(0)}°</Typography>
+        <Typography variant="h6">{weather.weather[0].description}</Typography>
+        <Typography variant="h6">
+          {weather.main.temp_min.toFixed(0)}/{weather.main.temp_max.toFixed(0)}° Feels like{" "}
+          {weather.main.feels_like.toFixed(0)}°
+        </Typography>
+        <Typography variant="body1">Humidity: {weather.main.humidity}%</Typography>
+        <Typography variant="body1">Wind Speed: {weather.wind.speed} m/s</Typography>
+      </Stack>
+    </Paper>
   );
 };
 
 export default CurrentWeather;
-
