@@ -9,3 +9,10 @@ export const getDayOfWeek = (dateString: string): string => {
   return date.toLocaleDateString("en-US", { weekday: "long" });
 };
 
+/**
+ * Capitalize the first letter of each word in a string
+ * @param str the string to capitalize.
+ * @returns the capitalized string.
+ */
+export const capitalizeWords = (str: string): string => str.replace(/\b\w/g, (char) => char.toUpperCase());
+

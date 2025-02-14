@@ -7,6 +7,8 @@ import Image from "next/image";
 
 import { Paper, Stack, Typography } from "@mui/material";
 
+import { capitalizeWords } from "@/lib/Helpers";
+
 /**
  * Current weather component.
  * @returns the current weather component.
@@ -30,9 +32,9 @@ const CurrentWeather: FC = async () => {
           alt={weather.weather[0].description}
         />
         <Typography variant="h4">{weather.main.temp.toFixed(0)}°</Typography>
-        <Typography variant="h6">{weather.weather[0].description}</Typography>
+        <Typography variant="h6">{capitalizeWords(weather.weather[0].description)}</Typography>
         <Typography variant="h6">
-          {weather.main.temp_min.toFixed(0)}/{weather.main.temp_max.toFixed(0)}° Feels like{" "}
+          {weather.main.temp_min.toFixed(0)} / {weather.main.temp_max.toFixed(0)}° Feels like{" "}
           {weather.main.feels_like.toFixed(0)}°
         </Typography>
         <Typography variant="body1">Humidity: {weather.main.humidity}%</Typography>
