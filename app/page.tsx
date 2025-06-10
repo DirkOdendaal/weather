@@ -1,13 +1,13 @@
 "use client";
-import { CurrentWeather } from "@/components/current-weather";
-import { ForecastWeek } from "@/components/forecast-week";
-import { Navbar } from "@/components/navbar";
-import { useWeatherData } from "@/hooks/use-weather-data";
+import CurrentWeather from "@/components/current-weather";
+import ForecastWeek from "@/components/forecast-week";
+import Navbar from "@/components/navbar";
+import useWeatherData from "@/hooks/use-weather-data";
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 
-export default function Home() {
-  const [searchQuery, setSearchQuery] = React.useState("New York");
+const Home = () => {
+  const [searchQuery, setSearchQuery] = useState("New York");
   const { currentWeather, forecast, isLoading, error } =
     useWeatherData(searchQuery);
 
@@ -62,4 +62,6 @@ export default function Home() {
       </main>
     </div>
   );
-}
+};
+
+export default Home;

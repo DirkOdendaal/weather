@@ -1,9 +1,9 @@
-import React from "react";
+import React, { FC } from "react";
 import { Button, Tooltip } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useTheme } from "next-themes";
 
-export const ThemeSwitch: React.FC = () => {
+const ThemeSwitch: FC = () => {
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
 
@@ -31,3 +31,5 @@ export const ThemeSwitch: React.FC = () => {
     </Tooltip>
   );
 };
+
+export default ThemeSwitch;

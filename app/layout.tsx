@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
+import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: { default: siteConfig.name, template: `%s - ${siteConfig.name}` },
@@ -20,11 +21,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -38,4 +35,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

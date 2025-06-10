@@ -88,6 +88,15 @@ export default defineConfig([globalIgnores([
     rules: {
         "no-console": "warn",
         "react/prop-types": "off",
+        "react/function-component-definition": [
+            "error",
+            {
+                "namedComponents": "arrow-function",
+                "unnamedComponents": "arrow-function"
+            }
+        ],
+        "import/no-default-export": "off", // Allow default exports
+        "import/prefer-default-export": "error", // Prefer default export if only one export
         "react/jsx-uses-react": "off",
         "react/react-in-jsx-scope": "off",
         "react-hooks/exhaustive-deps": "off",
@@ -97,6 +106,45 @@ export default defineConfig([globalIgnores([
         "no-unused-vars": "off",
         "unused-imports/no-unused-vars": "off",
         "unused-imports/no-unused-imports": "warn",
+        "no-restricted-syntax": [
+            "error",
+            {
+                "selector": "MemberExpression[object.name='React'][property.name='useState']",
+                "message": "Use the named import 'useState' instead of 'React.useState'."
+            },
+            {
+                "selector": "MemberExpression[object.name='React'][property.name='useEffect']",
+                "message": "Use the named import 'useEffect' instead of 'React.useEffect'."
+            },
+            {
+                "selector": "MemberExpression[object.name='React'][property.name='useContext']",
+                "message": "Use the named import 'useContext' instead of 'React.useContext'."
+            },
+            {
+                "selector": "MemberExpression[object.name='React'][property.name='useRef']",
+                "message": "Use the named import 'useRef' instead of 'React.useRef'."
+            },
+            {
+                "selector": "MemberExpression[object.name='React'][property.name='useMemo']",
+                "message": "Use the named import 'useMemo' instead of 'React.useMemo'."
+            },
+            {
+                "selector": "MemberExpression[object.name='React'][property.name='useCallback']",
+                "message": "Use the named import 'useCallback' instead of 'React.useCallback'."
+            },
+            {
+                "selector": "MemberExpression[object.name='React'][property.name='useReducer']",
+                "message": "Use the named import 'useReducer' instead of 'React.useReducer'."
+            },
+            {
+                "selector": "MemberExpression[object.name='React'][property.name='useLayoutEffect']",
+                "message": "Use the named import 'useLayoutEffect' instead of 'React.useLayoutEffect'."
+            },
+            {
+                "selector": "MemberExpression[object.name='React'][property.name='FC']",
+                "message": "Use the named import 'FC' instead of 'React.FC'."
+            },
+        ],
 
         "@typescript-eslint/no-unused-vars": ["warn", {
             args: "after-used",

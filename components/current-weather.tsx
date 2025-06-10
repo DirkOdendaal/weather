@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { Card, CardBody, Divider, Skeleton } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -11,7 +11,7 @@ interface CurrentWeatherProps {
   location: string;
 }
 
-export const CurrentWeather: React.FC<CurrentWeatherProps> = ({
+const CurrentWeather: FC<CurrentWeatherProps> = ({
   currentWeather,
   isLoading,
   location,
@@ -99,7 +99,7 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({
   );
 };
 
-const WeatherDetail: React.FC<{
+const WeatherDetail: FC<{
   icon: string;
   label: string;
   value: string;
@@ -117,7 +117,7 @@ const WeatherDetail: React.FC<{
   );
 };
 
-const CurrentWeatherSkeleton: React.FC = () => {
+const CurrentWeatherSkeleton: FC = () => {
   return (
     <Card className="h-full">
       <CardBody className="p-6">
@@ -169,3 +169,5 @@ function getWeatherIcon(condition: string): string {
 
   return iconMap[condition] || "lucide:cloud";
 }
+
+export default CurrentWeather;

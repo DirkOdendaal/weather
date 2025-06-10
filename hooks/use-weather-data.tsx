@@ -1,15 +1,15 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
 import { CurrentWeatherType, ForecastType } from "@/types/weather";
 
-export function useWeatherData(location: string) {
+const useWeatherData = (location: string) => {
   const [currentWeather, setCurrentWeather] =
-    React.useState<CurrentWeatherType | null>(null);
-  const [forecast, setForecast] = React.useState<ForecastType[] | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
+    useState<CurrentWeatherType | null>(null);
+  const [forecast, setForecast] = useState<ForecastType[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchWeatherData = async () => {
       setIsLoading(true);
       setError(null);
@@ -41,7 +41,7 @@ export function useWeatherData(location: string) {
   }, [location]);
 
   return { currentWeather, forecast, isLoading, error };
-}
+};
 
 // Mock data generators
 function generateMockCurrentWeather(location: string): CurrentWeatherType {
@@ -145,3 +145,5 @@ function generateMockForecast(): ForecastType[] {
 
   return forecast;
 }
+
+export default useWeatherData;

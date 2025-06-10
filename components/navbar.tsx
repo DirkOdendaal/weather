@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC, FormEvent, useState } from "react";
 import {
   Navbar as HeroUiNavbar,
   NavbarBrand,
@@ -7,16 +7,16 @@ import {
   Button,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { ThemeSwitch } from "./theme-switch";
+import ThemeSwitch from "./theme-switch";
 
 interface WeatherNavbarProps {
   onSearch: (query: string) => void;
 }
 
-export const Navbar: React.FC<WeatherNavbarProps> = ({ onSearch }) => {
-  const [searchValue, setSearchValue] = React.useState("");
+const Navbar: FC<WeatherNavbarProps> = ({ onSearch }) => {
+  const [searchValue, setSearchValue] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSearch(searchValue);
   };
@@ -63,3 +63,5 @@ export const Navbar: React.FC<WeatherNavbarProps> = ({ onSearch }) => {
     </HeroUiNavbar>
   );
 };
+
+export default Navbar;

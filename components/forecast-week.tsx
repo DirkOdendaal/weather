@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC, Fragment } from "react";
 import { Card, CardBody, CardHeader, Divider, Skeleton } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -10,10 +10,7 @@ interface ForecastWeekProps {
   isLoading: boolean;
 }
 
-export const ForecastWeek: React.FC<ForecastWeekProps> = ({
-  forecast,
-  isLoading,
-}) => {
+const ForecastWeek: FC<ForecastWeekProps> = ({ forecast, isLoading }) => {
   if (isLoading) {
     return <ForecastSkeleton />;
   }
@@ -60,7 +57,7 @@ export const ForecastWeek: React.FC<ForecastWeekProps> = ({
   );
 };
 
-const ForecastDay: React.FC<{
+const ForecastDay: FC<{
   day: ForecastType;
   isFirst: boolean;
 }> = ({ day, isFirst }) => {
@@ -123,7 +120,7 @@ const ForecastDay: React.FC<{
   );
 };
 
-const ForecastSkeleton: React.FC = () => {
+const ForecastSkeleton: FC = () => {
   return (
     <Card>
       <CardHeader className="flex flex-col gap-1">
@@ -134,7 +131,7 @@ const ForecastSkeleton: React.FC = () => {
       <CardBody>
         <div className="space-y-4">
           {[...Array(7)].map((_, index) => (
-            <React.Fragment key={index}>
+            <Fragment key={index}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <Skeleton className="w-12 h-12 rounded-full" />
@@ -149,7 +146,7 @@ const ForecastSkeleton: React.FC = () => {
                 </div>
               </div>
               {index < 6 && <Divider className="my-4" />}
-            </React.Fragment>
+            </Fragment>
           ))}
         </div>
       </CardBody>
@@ -194,3 +191,5 @@ function calculateTempPercentage(
 
   return Math.max(10, Math.min(percentage, 90)); // Ensure values are between 10% and 90%
 }
+
+export default ForecastWeek;
