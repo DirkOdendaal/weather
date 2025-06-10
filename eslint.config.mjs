@@ -96,13 +96,21 @@ export default defineConfig([globalIgnores([
             }
         ],
         "import/no-default-export": "off", // Allow default exports
-        "import/prefer-default-export": "error", // Prefer default export if only one export
         "react/jsx-uses-react": "off",
         "react/react-in-jsx-scope": "off",
         "react-hooks/exhaustive-deps": "off",
         "jsx-a11y/click-events-have-key-events": "warn",
         "jsx-a11y/interactive-supports-focus": "warn",
-        "prettier/prettier": "warn",
+        "prettier/prettier": ["warn", {
+            printWidth: 120,
+            tabWidth: 2,
+            semi: true,
+            singleQuote: false,
+            trailingComma: "all",
+            bracketSpacing: true,
+            arrowParens: "always",
+            useTabs: true,
+        }],
         "no-unused-vars": "off",
         "unused-imports/no-unused-vars": "off",
         "unused-imports/no-unused-imports": "warn",
@@ -151,6 +159,13 @@ export default defineConfig([globalIgnores([
             ignoreRestSiblings: false,
             argsIgnorePattern: "^_.*?$",
         }],
+        "@typescript-eslint/array-type": [
+            "error",
+            {
+                default: "generic",
+                readonly: "generic"
+            }
+        ],
         "react/self-closing-comp": "warn",
         "react/jsx-sort-props": ["warn", {
             callbacksLast: true,
