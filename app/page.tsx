@@ -2,6 +2,7 @@
 import CurrentWeatherComponent from "@/components/current-weather";
 import ForecastWeek from "@/components/forecast-week";
 import Navbar from "@/components/navbar";
+import { useAppContext } from "@/context-providers/application-context";
 import useWeatherData from "@/hooks/use-weather-data";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
@@ -9,6 +10,7 @@ import React, { useState } from "react";
 const Home = () => {
 	const [searchQuery, setSearchQuery] = useState("Leusden");
 	const { currentWeather, forecast, isLoading, error } = useWeatherData(searchQuery);
+	const { languageConfig } = useAppContext();
 
 	const handleSearch = (query: string) => {
 		if (query.trim()) {
@@ -27,7 +29,9 @@ const Home = () => {
 					initial={{ opacity: 0, y: 20 }}
 					transition={{ duration: 0.5 }}
 				>
-					<h1 className="text-2xl md:text-3xl font-semibold mb-2">Weather in {searchQuery}</h1>
+					<h1 className="text-2xl md:text-3xl font-semibold mb-2">
+						{languageConfig.displayTexts.weatherLocationHeader.replace("{location}", searchQuery)}
+					</h1>
 					<p className="text-foreground-500">
 						{new Date().toLocaleDateString("en-US", {
 							weekday: "long",

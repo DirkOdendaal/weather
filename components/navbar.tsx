@@ -1,45 +1,90 @@
-import React, { FC, FormEvent, useState } from "react";
-import { Navbar as HeroUiNavbar, NavbarBrand, NavbarContent, Input, Button } from "@heroui/react";
+import React, { FC, FormEvent, useRef } from "react";
+import {
+	Navbar as HeroUiNavbar,
+	NavbarBrand,
+	NavbarContent,
+	Input,
+	Button,
+	Popover,
+	PopoverTrigger,
+	PopoverContent,
+	Select,
+	SelectItem,
+	Switch,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
+import ThemeSwitch from "./theme-switch";
+import { useAppContext } from "@/context-providers/application-context";
+import { Languages } from "@/enums/languages";
 
 interface WeatherNavbarProps {
 	onSearch: (query: string) => void;
 }
 
 const Navbar: FC<WeatherNavbarProps> = ({ onSearch }) => {
-	const [searchValue, setSearchValue] = useState("");
+	const searchRef = useRef<HTMLInputElement>(null);
+	const { languageConfig, changeLanguage } = useAppContext();
 
 	const handleSubmit = (event: FormEvent) => {
 		event.preventDefault();
-		onSearch(searchValue);
+		onSearch(searchRef.current?.value ?? "");
 	};
 
 	return (
 		<HeroUiNavbar isBordered maxWidth="xl">
 			<NavbarBrand>
 				<Icon className="text-primary mr-2" height={28} icon="lucide:cloud-sun" width={28} />
-				<p className="font-semibold text-inherit">Weather</p>
+				<p className="font-semibold text-inherit">{languageConfig.displayTexts.title}</p>
 			</NavbarBrand>
 
-			<NavbarContent className="w-full" justify="end">
-				<form className="flex w-full items-center gap-2" onSubmit={handleSubmit}>
+			<NavbarContent className="flex w-full gap-2" justify="center">
+				<form className="flex w-full items-center gap-2 lg:justify-end" onSubmit={handleSubmit}>
 					<Input
-						classNames={{
-							base: "w-full",
-							inputWrapper: "h-10",
-						}}
-						placeholder="Search for a city..."
+						ref={searchRef}
+						className="md:w-full lg:w-[360px]"
+						placeholder={languageConfig.displayTexts.searchPlaceholder}
 						startContent={<Icon className="text-default-400" icon="lucide:search" width={18} />}
-						value={searchValue}
-						onValueChange={setSearchValue}
 					/>
 					<Button isIconOnly aria-label="Search" color="primary" type="submit">
 						<Icon icon="lucide:search" width={18} />
 					</Button>
 				</form>
-				<Button isIconOnly color="primary">
-					<Icon icon="lucide:settings" width={18} />
-				</Button>
+				<Popover>
+					<PopoverTrigger>
+						<Button isIconOnly color="primary">
+							<Icon icon="lucide:settings" width={18} />
+						</Button>
+					</PopoverTrigger>
+					<PopoverContent aria-label="Static Actions" className="w-[360px]">
+						<div className="flex w-full items-center gap-2 justify-between p-2">
+							<span className="text-sm font-medium">{languageConfig.displayTexts.toggleDarkMode}</span>
+							<ThemeSwitch />
+						</div>
+						<div className="flex w-full items-center gap-2 justify-between p-2">
+							<span className="text-sm font-medium">{languageConfig.displayTexts.languageLabel}</span>
+							<Select
+								aria-label="Language Select"
+								className="w-[120px]"
+								defaultSelectedKeys={[languageConfig.languageCode]}
+								size="sm"
+								value={languageConfig.languageName}
+								onChange={(event) => {
+									const selectedLanguage = event.target.value as Languages;
+
+									changeLanguage(selectedLanguage);
+								}}
+							>
+								{languageConfig.languageOptions.map((option) => (
+									<SelectItem key={option.value}>{option.label}</SelectItem>
+								))}
+							</Select>
+						</div>
+						<div className="flex w-full item-center gap-2 justify-between p-2">
+							<span className="text-sm font-medium">Imperial</span>
+							<Switch />
+						</div>
+					</PopoverContent>
+				</Popover>
 			</NavbarContent>
 		</HeroUiNavbar>
 	);

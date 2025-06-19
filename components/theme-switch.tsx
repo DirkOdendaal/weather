@@ -13,7 +13,7 @@ const ThemeSwitch: FC = () => {
 
 	return (
 		<Tooltip content={`Switch to ${isDark ? "light" : "dark"} mode`} placement="bottom">
-			<Button isIconOnly color="primary" onPress={handleToggle}>
+			<Button isIconOnly color="primary" size="sm" onPress={handleToggle}>
 				<Icon height={20} icon={isDark ? "lucide:sun" : "lucide:moon"} width={20} />
 			</Button>
 		</Tooltip>
