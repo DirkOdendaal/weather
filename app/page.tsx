@@ -2,14 +2,14 @@
 import CurrentWeatherComponent from "@/components/current-weather";
 import ForecastWeek from "@/components/forecast-week";
 import Navbar from "@/components/navbar";
-import { useAppContext } from "@/context-providers/application-context";
-import useWeatherData from "@/hooks/use-weather-data";
+import { useAppContext } from "@/context-providers/application-provider";
+import { useWeatherContext } from "@/context-providers/weather-provider";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 
 const Home = () => {
 	const [searchQuery, setSearchQuery] = useState("Leusden");
-	const { currentWeather, forecast, isLoading, error } = useWeatherData(searchQuery);
+	const { currentWeather, forecast, isLoading, error } = useWeatherContext();
 	const { languageConfig } = useAppContext();
 
 	const handleSearch = (query: string) => {

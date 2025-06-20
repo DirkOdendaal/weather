@@ -7,8 +7,9 @@ import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ReactNode } from "react";
-import { AppProvider } from "@/context-providers/application-context";
+import { AppProvider } from "@/context-providers/application-provider";
 import { ToastProvider } from "@heroui/react";
+import { WeatherProvider } from "@/context-providers/weather-provider";
 
 export interface ProvidersProps {
 	children: ReactNode;
@@ -28,7 +29,9 @@ export const Providers = ({ children, themeProps }: ProvidersProps) => {
 		<HeroUIProvider navigate={router.push}>
 			<ToastProvider />
 			<NextThemesProvider {...themeProps}>
-				<AppProvider>{children}</AppProvider>
+				<AppProvider>
+					<WeatherProvider location="Leusden">{children}</WeatherProvider>
+				</AppProvider>
 			</NextThemesProvider>
 		</HeroUIProvider>
 	);

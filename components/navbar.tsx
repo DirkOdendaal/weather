@@ -14,8 +14,8 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import ThemeSwitch from "./theme-switch";
-import { useAppContext } from "@/context-providers/application-context";
-import { Languages } from "@/enums/languages";
+import { useAppContext } from "@/context-providers/application-provider";
+import { LanguageCodes } from "@/enums/languages-codes";
 
 interface WeatherNavbarProps {
 	onSearch: (query: string) => void;
@@ -69,7 +69,7 @@ const Navbar: FC<WeatherNavbarProps> = ({ onSearch }) => {
 								size="sm"
 								value={languageConfig.languageName}
 								onChange={(event) => {
-									const selectedLanguage = event.target.value as Languages;
+									const selectedLanguage = event.target.value as LanguageCodes;
 
 									changeLanguage(selectedLanguage);
 								}}

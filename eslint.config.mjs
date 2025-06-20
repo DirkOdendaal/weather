@@ -110,6 +110,7 @@ export default defineConfig([globalIgnores([
             bracketSpacing: true,
             arrowParens: "always",
             useTabs: true,
+            endOfLine: "lf",
         }],
         "no-unused-vars": "off",
         "unused-imports/no-unused-vars": "off",

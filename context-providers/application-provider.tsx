@@ -1,5 +1,5 @@
 import { languageConfigs } from "@/config/site";
-import { Languages } from "@/enums/languages";
+import { LanguageCodes } from "@/enums/languages-codes";
 import { Units } from "@/enums/unit";
 import { LanguageConfig } from "@/types/languages";
 import { addToast } from "@heroui/react";
@@ -20,12 +20,13 @@ type AppAction =
 	| { type: AppActionTypes.SetUnit; payload: Units };
 
 const initialState: AppState = {
-	languageConfig: languageConfigs.find((config) => config.languageCode === "en")!, // Default to English
+	languageConfig: languageConfigs.find((config) => config.languageCode === LanguageCodes.EN)!,
 	unit: Units.Metric,
 };
 
 interface AppContextType extends AppState {
-	changeLanguage: (language: Languages) => void;
+	changeLanguage: (language: LanguageCodes) => void;
+	changeUnitSystem: (unit: Units) => void;
 }
 
 const appReducer = (state: AppState, action: AppAction): AppState => {
@@ -44,18 +45,22 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider = ({ children }: { children: ReactNode }) => {
 	const [state, dispatch] = useReducer(appReducer, initialState);
 
-	const changeLanguage = (language: Languages) => {
-		const languageConfig = languageConfigs.find((config) => config.languageCode === language);
+	const changeLanguage = (languageCode: LanguageCodes) => {
+		const languageConfig = languageConfigs.find((config) => config.languageCode === languageCode);
 
 		if (languageConfig) {
 			dispatch({ type: AppActionTypes.SetLanguage, payload: languageConfig });
 		} else {
 			addToast({
 				title: "Language Configuration Error",
-				description: `Language configuration for ${language} not found.`,
+				description: `Language configuration for '${languageCode}' not found.`,
 				color: "danger",
 			});
 		}
+	};
+
+	const changeUnitSystem = (unit: Units) => {
+		dispatch({ type: AppActionTypes.SetUnit, payload: unit });
 	};
 
 	const context = useMemo(
@@ -63,6 +68,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 			languageConfig: state.languageConfig,
 			unit: state.unit,
 			changeLanguage,
+			changeUnitSystem,
 		}),
 		[state.languageConfig, state.unit],
 	);
