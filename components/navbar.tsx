@@ -16,18 +16,17 @@ import { Icon } from "@iconify/react";
 import ThemeSwitch from "./theme-switch";
 import { useAppContext } from "@/context-providers/application-provider";
 import { LanguageCodes } from "@/enums/languages-codes";
+import { useWeatherContext } from "@/context-providers/weather-provider";
+import { Units } from "@/enums/unit";
 
-interface WeatherNavbarProps {
-	onSearch: (query: string) => void;
-}
-
-const Navbar: FC<WeatherNavbarProps> = ({ onSearch }) => {
+const Navbar: FC = () => {
 	const searchRef = useRef<HTMLInputElement>(null);
-	const { languageConfig, changeLanguage } = useAppContext();
+	const { languageConfig, changeLanguage, changeUnitSystem, unit } = useAppContext();
+	const { changeLocation } = useWeatherContext();
 
 	const handleSubmit = (event: FormEvent) => {
 		event.preventDefault();
-		onSearch(searchRef.current?.value ?? "");
+		changeLocation(searchRef.current?.value ?? "");
 	};
 
 	return (
@@ -81,7 +80,12 @@ const Navbar: FC<WeatherNavbarProps> = ({ onSearch }) => {
 						</div>
 						<div className="flex w-full item-center gap-2 justify-between p-2">
 							<span className="text-sm font-medium">Imperial</span>
-							<Switch />
+							<Switch
+								isSelected={unit === Units.Imperial}
+								onChange={(e) => {
+									changeUnitSystem(e.target.checked ? Units.Imperial : Units.Metric);
+								}}
+							/>
 						</div>
 					</PopoverContent>
 				</Popover>

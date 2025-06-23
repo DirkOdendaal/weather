@@ -1,3 +1,4 @@
+import { LanguageCodes } from "@/enums/languages-codes";
 import { LanguageConfig } from "@/types/languages";
 
 export type SiteConfig = typeof siteConfig;
@@ -10,7 +11,7 @@ export const siteConfig = {
 
 export const languageConfigs: Array<LanguageConfig> = [
 	{
-		languageCode: "en",
+		languageCode: LanguageCodes.EN,
 		languageName: "English",
 		displayTexts: {
 			title: "Weather",
@@ -19,6 +20,15 @@ export const languageConfigs: Array<LanguageConfig> = [
 			settingsString: "Settings",
 			languageLabel: "Language",
 			weatherLocationHeader: "Weather in {location}",
+			weatherForecastHeader: "{days}-Day Forecast",
+			weatherForecastSubHeader: "Daily weather forecast",
+			feelsLike: "Feels Like",
+			humidity: "Humidity",
+			windSpeed: "Wind Speed",
+			pressure: "Pressure",
+			posibilityOfPrecipitation: "Chance of Precipitation",
+			minTemperature: "Min Temperature",
+			maxTemperature: "Max Temperature",
 		},
 		languageOptions: [
 			{ value: "en", label: "English" },
@@ -26,7 +36,7 @@ export const languageConfigs: Array<LanguageConfig> = [
 		],
 	},
 	{
-		languageCode: "nl",
+		languageCode: LanguageCodes.NL,
 		languageName: "Nederlands",
 		displayTexts: {
 			title: "Weer",
@@ -35,6 +45,15 @@ export const languageConfigs: Array<LanguageConfig> = [
 			settingsString: "Instellingen",
 			languageLabel: "Taal",
 			weatherLocationHeader: "Weer in {location}",
+			weatherForecastHeader: "{days}-Daagse Voorspelling",
+			weatherForecastSubHeader: "Dagelijkse weersvoorspelling",
+			feelsLike: "Voelt als",
+			humidity: "Vochtigheid",
+			windSpeed: "Wind Snelheid",
+			pressure: "Luchtdruk",
+			posibilityOfPrecipitation: "Kans op Neerslag",
+			minTemperature: "Min Temperatuur",
+			maxTemperature: "Max Temperatuur",
 		},
 		languageOptions: [
 			{ value: "en", label: "Engels" },

@@ -3,18 +3,23 @@ import { getWeatherByLocation, getForecastByLocation } from "@/api/weather";
 import { ForecastListItem, Weather } from "@/types/weather";
 import { aggregateForecastByDay } from "@/utils/weather-utils";
 import { createContext, useContext, useEffect, useMemo, useReducer } from "react";
+import { useAppContext } from "./application-provider";
+import { LanguageCodes } from "@/enums/languages-codes";
+import { Units } from "@/enums/unit";
 
 interface WeatherState {
 	currentWeather: Weather | null;
 	forecast: Array<ForecastListItem> | null;
 	isLoading: boolean;
 	error: string | null;
+	locationName: string;
 }
 
 enum WeatherActionTypes {
 	SET_CURRENT_WEATHER = "SET_CURRENT_WEATHER",
 	SET_FORECAST = "SET_FORECAST",
 	SET_LOADING = "SET_LOADING",
+	SET_LOCATION_NAME = "SET_LOCATION_NAME",
 	SET_ERROR = "SET_ERROR",
 }
 
@@ -22,17 +27,20 @@ type WeatherActions =
 	| { type: WeatherActionTypes.SET_CURRENT_WEATHER; payload: Weather | null }
 	| { type: WeatherActionTypes.SET_FORECAST; payload: Array<ForecastListItem> | null }
 	| { type: WeatherActionTypes.SET_LOADING; payload: boolean }
+	| { type: WeatherActionTypes.SET_LOCATION_NAME; payload: string }
 	| { type: WeatherActionTypes.SET_ERROR; payload: string | null };
 
 const initialState: WeatherState = {
 	currentWeather: null,
+	error: null,
 	forecast: null,
 	isLoading: true,
-	error: null,
+	locationName: "",
 };
 
 interface WeatherContextType extends WeatherState {
-	setWeatherByLocation: (location: string) => void;
+	setWeatherByLocation: (location: string, languageCode: LanguageCodes, unit: Units) => void;
+	changeLocation: (location: string) => void;
 }
 
 const weatherReducer = (state: WeatherState, action: WeatherActions): WeatherState => {
@@ -43,6 +51,8 @@ const weatherReducer = (state: WeatherState, action: WeatherActions): WeatherSta
 			return { ...state, forecast: action.payload };
 		case WeatherActionTypes.SET_LOADING:
 			return { ...state, isLoading: action.payload };
+		case WeatherActionTypes.SET_LOCATION_NAME:
+			return { ...state, locationName: action.payload };
 		case WeatherActionTypes.SET_ERROR:
 			return { ...state, error: action.payload };
 		default:
@@ -54,19 +64,21 @@ const WeatherContext = createContext<WeatherContextType | undefined>(undefined);
 
 export const WeatherProvider = ({ children, location }: { children: React.ReactNode; location: string }) => {
 	const [state, dispatch] = useReducer(weatherReducer, initialState);
+	const { languageConfig, unit } = useAppContext();
 
 	useEffect(() => {
 		dispatch({ type: WeatherActionTypes.SET_LOADING, payload: true });
-		setWeatherByLocation(location);
-	}, [location]);
+		setWeatherByLocation(location, languageConfig.languageCode, unit);
+	}, [location, languageConfig, unit]);
 
-	const setWeatherByLocation = async (location: string) => {
+	const setWeatherByLocation = async (location: string, languageCode: LanguageCodes, unit: Units) => {
 		try {
 			const locationResponse = await getLocationByCityName(location);
-			const currentWeatherResponse = await getWeatherByLocation(locationResponse);
-			const forecastResponse = await getForecastByLocation(locationResponse);
+			const currentWeatherResponse = await getWeatherByLocation(locationResponse, languageCode, unit);
+			const forecastResponse = await getForecastByLocation(locationResponse, languageCode, unit);
 			const dailyForecast = aggregateForecastByDay(forecastResponse);
 
+			dispatch({ type: WeatherActionTypes.SET_LOCATION_NAME, payload: locationResponse.name });
 			dispatch({ type: WeatherActionTypes.SET_CURRENT_WEATHER, payload: currentWeatherResponse });
 			dispatch({ type: WeatherActionTypes.SET_FORECAST, payload: dailyForecast });
 		} catch (error) {
@@ -81,13 +93,19 @@ export const WeatherProvider = ({ children, location }: { children: React.ReactN
 		}
 	};
 
+	const changeLocation = (newLocation: string) => {
+		setWeatherByLocation(newLocation, languageConfig.languageCode, unit);
+	};
+
 	const context = useMemo(
 		() => ({
 			currentWeather: state.currentWeather,
 			forecast: state.forecast,
 			isLoading: state.isLoading,
 			error: state.error,
+			locationName: state.locationName,
 			setWeatherByLocation,
+			changeLocation,
 		}),
 		[state.currentWeather, state.forecast, state.isLoading, state.error],
 	);

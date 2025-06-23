@@ -11,7 +11,7 @@ const ForecastSkeleton: FC = () => {
 			<Divider />
 			<CardBody>
 				<div className="space-y-4">
-					{[...Array(7)].map((_, index) => (
+					{[...Array(5)].map((_, index) => (
 						<Fragment key={index}>
 							<div className="flex items-center justify-between">
 								<div className="flex items-center gap-4">

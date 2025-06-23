@@ -1,18 +1,19 @@
+"use client";
+
 import React, { FC } from "react";
 import { Card, CardBody, CardHeader, Divider } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 
-import { ForecastListItem } from "@/types/weather";
 import ForecastSkeleton from "./forecast-skeleton";
 import ForecastDay from "./forecast-day";
+import { useWeatherContext } from "@/context-providers/weather-provider";
+import { useAppContext } from "@/context-providers/application-provider";
 
-interface ForecastWeekProps {
-	forecast: Array<ForecastListItem> | null;
-	isLoading: boolean;
-}
+const ForecastWeek: FC = () => {
+	const { forecast, isLoading } = useWeatherContext();
+	const { languageConfig } = useAppContext();
 
-const ForecastWeek: FC<ForecastWeekProps> = ({ forecast, isLoading }) => {
 	if (isLoading) {
 		return <ForecastSkeleton />;
 	}
@@ -31,8 +32,10 @@ const ForecastWeek: FC<ForecastWeekProps> = ({ forecast, isLoading }) => {
 	return (
 		<Card>
 			<CardHeader className="flex flex-col gap-1">
-				<h2 className="text-xl font-semibold">{forecast.length}-Day Forecast</h2>
-				<p className="text-sm text-foreground-500">Daily weather forecast</p>
+				<h2 className="text-xl font-semibold">
+					{languageConfig.displayTexts.weatherForecastHeader.replace("{days}", forecast.length.toString())}
+				</h2>
+				<p className="text-sm text-foreground-500">{languageConfig.displayTexts.weatherForecastSubHeader}</p>
 			</CardHeader>
 			<Divider />
 			<CardBody>

@@ -3,17 +3,16 @@ import { Card, CardBody, Divider } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 
-import { Weather } from "@/types/weather";
 import WeatherDetail from "./weather-detail";
 import CurrentWeatherSkeleton from "./current-weather-skeleton";
 import { getWeatherIcon } from "@/utils/weather-utils";
+import { useWeatherContext } from "@/context-providers/weather-provider";
+import { useAppContext } from "@/context-providers/application-provider";
 
-interface CurrentWeatherProps {
-	currentWeather: Weather | null;
-	isLoading: boolean;
-}
+const CurrentWeatherComponent: FC = () => {
+	const { currentWeather, isLoading } = useWeatherContext();
+	const { languageConfig } = useAppContext();
 
-const CurrentWeatherComponent: FC<CurrentWeatherProps> = ({ currentWeather, isLoading }) => {
 	if (isLoading) {
 		return <CurrentWeatherSkeleton />;
 	}
@@ -46,10 +45,26 @@ const CurrentWeatherComponent: FC<CurrentWeatherProps> = ({ currentWeather, isLo
 					<Divider className="my-4" />
 
 					<div className="grid grid-cols-2 gap-4">
-						<WeatherDetail icon="wi:thermometer" label="Feels Like" value={`${main.feels_like}°`} />
-						<WeatherDetail icon="wi:humidity" label="Humidity" value={`${main.feels_like}%`} />
-						<WeatherDetail icon="wi:strong-wind" label="Wind" value={`${wind.speed} km/h`} />
-						<WeatherDetail icon="wi:barometer" label="Pressure" value={`${main.pressure} hPa`} />
+						<WeatherDetail
+							icon="wi:thermometer"
+							label={languageConfig.displayTexts.feelsLike}
+							value={`${main.feels_like}°`}
+						/>
+						<WeatherDetail
+							icon="wi:humidity"
+							label={languageConfig.displayTexts.humidity}
+							value={`${main.feels_like}%`}
+						/>
+						<WeatherDetail
+							icon="wi:strong-wind"
+							label={languageConfig.displayTexts.windSpeed}
+							value={`${wind.speed} km/h`}
+						/>
+						<WeatherDetail
+							icon="wi:barometer"
+							label={languageConfig.displayTexts.pressure}
+							value={`${main.pressure} hPa`}
+						/>
 					</div>
 				</CardBody>
 			</Card>
