@@ -29,6 +29,7 @@ export const languageConfigs: Array<LanguageConfig> = [
 			posibilityOfPrecipitation: "Chance of Precipitation",
 			minTemperature: "Min Temperature",
 			maxTemperature: "Max Temperature",
+			imperial: "Imperial",
 		},
 		languageOptions: [
 			{ value: "en", label: "English" },
@@ -54,6 +55,7 @@ export const languageConfigs: Array<LanguageConfig> = [
 			posibilityOfPrecipitation: "Kans op Neerslag",
 			minTemperature: "Min Temperatuur",
 			maxTemperature: "Max Temperatuur",
+			imperial: "Imperiaal",
 		},
 		languageOptions: [
 			{ value: "en", label: "Engels" },

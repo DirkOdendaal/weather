@@ -19,6 +19,7 @@ export interface LanguageConfig {
 		posibilityOfPrecipitation: string;
 		minTemperature: string;
 		maxTemperature: string;
+		imperial: string;
 	};
 	languageOptions: Array<{
 		value: string;

@@ -79,7 +79,7 @@ const Navbar: FC = () => {
 							</Select>
 						</div>
 						<div className="flex w-full item-center gap-2 justify-between p-2">
-							<span className="text-sm font-medium">Imperial</span>
+							<span className="text-sm font-medium">{languageConfig.displayTexts.imperial}</span>
 							<Switch
 								isSelected={unit === Units.Imperial}
 								onChange={(e) => {
