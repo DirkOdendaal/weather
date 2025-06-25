@@ -6,11 +6,12 @@ import Navbar from "@/components/navbar";
 import { useAppContext } from "@/context-providers/application-provider";
 import { useWeatherContext } from "@/context-providers/weather-provider";
 import { getFormattedDate } from "@/utils/utils";
+import { Skeleton } from "@heroui/react";
 import { motion } from "framer-motion";
 import React from "react";
 
 const Home = () => {
-	const { error, locationName } = useWeatherContext();
+	const { error, locationName, isLoading } = useWeatherContext();
 	const { languageConfig } = useAppContext();
 
 	return (
@@ -18,17 +19,24 @@ const Home = () => {
 			<Navbar />
 
 			<main className="container mx-auto px-4 py-8 max-w-6xl">
-				<motion.div
-					animate={{ opacity: 1, y: 0 }}
-					className="mb-8"
-					initial={{ opacity: 0, y: 20 }}
-					transition={{ duration: 0.5 }}
-				>
-					<h1 className="text-2xl md:text-3xl font-semibold mb-2">
-						{languageConfig.displayTexts.weatherLocationHeader.replace("{location}", locationName)}
-					</h1>
-					<p className="text-foreground-500">{getFormattedDate(Date.now() / 1000, languageConfig.languageCode)}</p>
-				</motion.div>
+				{isLoading ? (
+					<div className="mb-8">
+						<Skeleton className="h-8 md:h-9 w-96 rounded-lg mb-2" />
+						<Skeleton className="h-6 w-64 rounded-lg" />
+					</div>
+				) : (
+					<motion.div
+						animate={{ opacity: 1, y: 0 }}
+						className="mb-8"
+						initial={{ opacity: 0, y: 20 }}
+						transition={{ duration: 0.5 }}
+					>
+						<h1 className="text-2xl md:text-3xl font-semibold mb-2">
+							{languageConfig.displayTexts.weatherLocationHeader.replace("{location}", locationName)}
+						</h1>
+						<p className="text-foreground-500">{getFormattedDate(Date.now() / 1000, languageConfig.languageCode)}</p>
+					</motion.div>
+				)}
 
 				{error ? (
 					<div className="text-danger text-center py-10">{error}. Please try another location.</div>

@@ -30,7 +30,7 @@ export const Providers = ({ children, themeProps }: ProvidersProps) => {
 			<ToastProvider />
 			<NextThemesProvider {...themeProps}>
 				<AppProvider>
-					<WeatherProvider location="Leusden">{children}</WeatherProvider>
+					<WeatherProvider>{children}</WeatherProvider>
 				</AppProvider>
 			</NextThemesProvider>
 		</HeroUIProvider>
