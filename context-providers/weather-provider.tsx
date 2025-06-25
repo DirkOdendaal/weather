@@ -1,11 +1,13 @@
-import { getLocationByCityName } from "@/api/location";
+import { getLocationByCityName, getLocationByCoordinates } from "@/api/location";
 import { getWeatherByLocation, getForecastByLocation } from "@/api/weather";
 import { ForecastListItem, Weather } from "@/types/weather";
 import { aggregateForecastByDay } from "@/utils/weather-utils";
-import { createContext, useContext, useEffect, useMemo, useReducer } from "react";
+import { createContext, useContext, useEffect, useMemo, useReducer, useState } from "react";
 import { useAppContext } from "./application-provider";
 import { LanguageCodes } from "@/enums/languages-codes";
 import { Units } from "@/enums/unit";
+import { LatLon } from "@/types/location";
+import { getCurrentLocation } from "@/utils/utils";
 
 interface WeatherState {
 	currentWeather: Weather | null;
@@ -39,7 +41,7 @@ const initialState: WeatherState = {
 };
 
 interface WeatherContextType extends WeatherState {
-	setWeatherByLocation: (location: string, languageCode: LanguageCodes, unit: Units) => void;
+	setWeatherByLocation: (location: LatLon, languageCode: LanguageCodes, unit: Units) => void;
 	changeLocation: (location: string) => void;
 }
 
@@ -62,18 +64,27 @@ const weatherReducer = (state: WeatherState, action: WeatherActions): WeatherSta
 
 const WeatherContext = createContext<WeatherContextType | undefined>(undefined);
 
-export const WeatherProvider = ({ children, location }: { children: React.ReactNode; location: string }) => {
+export const WeatherProvider = ({ children }: { children: React.ReactNode }) => {
 	const [state, dispatch] = useReducer(weatherReducer, initialState);
 	const { languageConfig, unit } = useAppContext();
 
+	const [location, setLocation] = useState<LatLon | null>(null);
+
 	useEffect(() => {
+		dispatch({ type: WeatherActionTypes.SET_LOADING, payload: true });
+		getCurrentLocation().then(setLocation);
+	}, []);
+
+	useEffect(() => {
+		if (!location) return;
+
 		dispatch({ type: WeatherActionTypes.SET_LOADING, payload: true });
 		setWeatherByLocation(location, languageConfig.languageCode, unit);
 	}, [location, languageConfig, unit]);
 
-	const setWeatherByLocation = async (location: string, languageCode: LanguageCodes, unit: Units) => {
+	const setWeatherByLocation = async (location: LatLon, languageCode: LanguageCodes, unit: Units) => {
 		try {
-			const locationResponse = await getLocationByCityName(location);
+			const locationResponse = await getLocationByCoordinates(location.lat, location.lon);
 			const currentWeatherResponse = await getWeatherByLocation(locationResponse, languageCode, unit);
 			const forecastResponse = await getForecastByLocation(locationResponse, languageCode, unit);
 			const dailyForecast = aggregateForecastByDay(forecastResponse);
@@ -93,8 +104,10 @@ export const WeatherProvider = ({ children, location }: { children: React.ReactN
 		}
 	};
 
-	const changeLocation = (newLocation: string) => {
-		setWeatherByLocation(newLocation, languageConfig.languageCode, unit);
+	const changeLocation = async (newLocation: string) => {
+		const locationResponse = await getLocationByCityName(newLocation);
+
+		setWeatherByLocation(locationResponse, languageConfig.languageCode, unit);
 	};
 
 	const context = useMemo(

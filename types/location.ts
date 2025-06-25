@@ -1,7 +1,10 @@
 export interface Location {
-	zip: string;
 	name: string;
 	lat: number;
 	lon: number;
-	country: string;
+}
+
+export interface LatLon {
+	lat: number;
+	lon: number;
 }
