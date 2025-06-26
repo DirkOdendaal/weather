@@ -78,11 +78,11 @@ export const WeatherProvider = ({ children }: { children: React.ReactNode }) => 
 	useEffect(() => {
 		if (!location) return;
 
-		dispatch({ type: WeatherActionTypes.SET_LOADING, payload: true });
 		setWeatherByLocation(location, languageConfig.languageCode, unit);
 	}, [location, languageConfig, unit]);
 
 	const setWeatherByLocation = async (location: LatLon, languageCode: LanguageCodes, unit: Units) => {
+		dispatch({ type: WeatherActionTypes.SET_LOADING, payload: true });
 		try {
 			const locationResponse = await getLocationByCoordinates(location.lat, location.lon);
 			const currentWeatherResponse = await getWeatherByLocation(locationResponse, languageCode, unit);
@@ -105,11 +105,9 @@ export const WeatherProvider = ({ children }: { children: React.ReactNode }) => 
 	};
 
 	const changeLocation = async (newLocation: string) => {
-		dispatch({ type: WeatherActionTypes.SET_LOADING, payload: true });
 		const locationResponse = await getLocationByCityName(newLocation);
 
 		setWeatherByLocation(locationResponse, languageConfig.languageCode, unit);
-		dispatch({ type: WeatherActionTypes.SET_LOADING, payload: false });
 	};
 
 	const context = useMemo(
