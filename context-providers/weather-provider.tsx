@@ -105,9 +105,11 @@ export const WeatherProvider = ({ children }: { children: React.ReactNode }) => 
 	};
 
 	const changeLocation = async (newLocation: string) => {
+		dispatch({ type: WeatherActionTypes.SET_LOADING, payload: true });
 		const locationResponse = await getLocationByCityName(newLocation);
 
 		setWeatherByLocation(locationResponse, languageConfig.languageCode, unit);
+		dispatch({ type: WeatherActionTypes.SET_LOADING, payload: false });
 	};
 
 	const context = useMemo(
