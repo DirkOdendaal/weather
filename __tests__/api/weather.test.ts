@@ -10,9 +10,7 @@ describe("Weather API", () => {
 	const mockLocation: Location = {
 		lat: 40.7128,
 		lon: -74.006,
-		zip: "",
 		name: "",
-		country: "",
 	};
 
 	it("should fetch current weather data", async () => {
