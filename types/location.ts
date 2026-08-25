@@ -1,10 +1,10 @@
 export interface Location {
-	name: string;
-	lat: number;
-	lon: number;
+  name: string;
+  lat: number;
+  lon: number;
 }
 
 export interface LatLon {
-	lat: number;
-	lon: number;
+  lat: number;
+  lon: number;
 }
