@@ -3,74 +3,68 @@ import { LanguageCodes } from "@/enums/languages-codes";
 import { Units } from "@/enums/unit";
 import { LanguageConfig } from "@/types/languages";
 import { addToast } from "@heroui/react";
-import React, { createContext, useReducer, useContext, ReactNode, useMemo } from "react";
+import React, { createContext, useContext, ReactNode, useMemo, useCallback } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
-interface AppState {
+const LANGUAGE_STORAGE_KEY = "weather:language";
+const UNIT_STORAGE_KEY = "weather:unit";
+
+const defaultLanguageConfig = languageConfigs.find((config) => config.languageCode === LanguageCodes.EN)!;
+
+interface AppContextType {
   languageConfig: LanguageConfig;
   unit: Units;
-}
-
-enum AppActionTypes {
-  SetLanguage = "SET_LANGUAGE",
-  SetUnit = "SET_UNIT",
-}
-
-type AppAction =
-  | { type: AppActionTypes.SetLanguage; payload: LanguageConfig }
-  | { type: AppActionTypes.SetUnit; payload: Units };
-
-const initialState: AppState = {
-  languageConfig: languageConfigs.find((config) => config.languageCode === LanguageCodes.EN)!,
-  unit: Units.Metric,
-};
-
-interface AppContextType extends AppState {
   changeLanguage: (language: LanguageCodes) => void;
   changeUnitSystem: (unit: Units) => void;
 }
 
-const appReducer = (state: AppState, action: AppAction): AppState => {
-  switch (action.type) {
-    case AppActionTypes.SetLanguage:
-      return { ...state, languageConfig: action.payload };
-    case AppActionTypes.SetUnit:
-      return { ...state, unit: action.payload };
-    default:
-      return state;
-  }
-};
-
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(appReducer, initialState);
+  const [languageCode, setLanguageCode] = useLocalStorage<LanguageCodes>(LANGUAGE_STORAGE_KEY, LanguageCodes.EN, {
+    initializeWithValue: false,
+  });
+  const [unit, setUnit] = useLocalStorage<Units>(UNIT_STORAGE_KEY, Units.Metric, { initializeWithValue: false });
 
-  const changeLanguage = (languageCode: LanguageCodes) => {
-    const languageConfig = languageConfigs.find((config) => config.languageCode === languageCode);
+  const languageConfig = useMemo(
+    () => languageConfigs.find((config) => config.languageCode === languageCode) ?? defaultLanguageConfig,
+    [languageCode],
+  );
 
-    if (languageConfig) {
-      dispatch({ type: AppActionTypes.SetLanguage, payload: languageConfig });
-    } else {
-      addToast({
-        title: "Language Configuration Error",
-        description: `Language configuration for '${languageCode}' not found.`,
-        color: "danger",
-      });
-    }
-  };
+  const changeLanguage = useCallback(
+    (nextLanguageCode: LanguageCodes) => {
+      const nextConfig = languageConfigs.find((config) => config.languageCode === nextLanguageCode);
 
-  const changeUnitSystem = (unit: Units) => {
-    dispatch({ type: AppActionTypes.SetUnit, payload: unit });
-  };
+      if (!nextConfig) {
+        addToast({
+          title: "Language Configuration Error",
+          description: `Language configuration for '${nextLanguageCode}' not found.`,
+          color: "danger",
+        });
+
+        return;
+      }
+
+      setLanguageCode(nextLanguageCode);
+    },
+    [setLanguageCode],
+  );
+
+  const changeUnitSystem = useCallback(
+    (nextUnit: Units) => {
+      setUnit(nextUnit);
+    },
+    [setUnit],
+  );
 
   const context = useMemo(
     () => ({
-      languageConfig: state.languageConfig,
-      unit: state.unit,
+      languageConfig,
+      unit,
       changeLanguage,
       changeUnitSystem,
     }),
-    [state.languageConfig, state.unit],
+    [languageConfig, unit, changeLanguage, changeUnitSystem],
   );
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;

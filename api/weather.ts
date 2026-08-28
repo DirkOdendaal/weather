@@ -1,5 +1,3 @@
-"use server";
-
 import { LanguageCodes } from "@/enums/languages-codes";
 import { Units } from "@/enums/unit";
 import { Location } from "@/types/location";
