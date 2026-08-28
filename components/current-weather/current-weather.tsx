@@ -6,12 +6,13 @@ import { motion } from "framer-motion";
 import WeatherDetail from "../weather-detail";
 import CurrentWeatherSkeleton from "./current-weather-skeleton";
 import { getWeatherIcon } from "@/utils/weather-utils";
+import { formatWindSpeed } from "@/utils/units";
 import { useWeatherContext } from "@/context-providers/weather-provider";
 import { useAppContext } from "@/context-providers/application-provider";
 
 const CurrentWeatherComponent: FC = () => {
   const { currentWeather, isLoading } = useWeatherContext();
-  const { languageConfig } = useAppContext();
+  const { languageConfig, unit } = useAppContext();
 
   if (isLoading) {
     return <CurrentWeatherSkeleton />;
@@ -48,17 +49,17 @@ const CurrentWeatherComponent: FC = () => {
             <WeatherDetail
               icon="wi:thermometer"
               label={languageConfig.displayTexts.feelsLike}
-              value={`${main.feels_like}°`}
+              value={`${Math.round(main.feels_like)}°`}
             />
             <WeatherDetail
               icon="wi:humidity"
               label={languageConfig.displayTexts.humidity}
-              value={`${main.feels_like}%`}
+              value={`${Math.round(main.humidity)}%`}
             />
             <WeatherDetail
               icon="wi:strong-wind"
               label={languageConfig.displayTexts.windSpeed}
-              value={`${wind.speed} km/h`}
+              value={formatWindSpeed(wind.speed, unit)}
             />
             <WeatherDetail
               icon="wi:barometer"

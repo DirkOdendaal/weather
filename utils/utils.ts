@@ -1,15 +1,27 @@
 import { LanguageCodes } from "@/enums/languages-codes";
 import { LatLon } from "@/types/location";
 
-export const getFormattedDate = (timestamp: number, language: LanguageCodes): string => {
-  const locale = language === LanguageCodes.EN ? "en-US" : "nl-NL"; // Adjust based on your language codes
+const LOCALE_BY_LANGUAGE: Record<LanguageCodes, string> = {
+  [LanguageCodes.EN]: "en-US",
+  [LanguageCodes.NL]: "nl-NL",
+};
 
-  return new Date(timestamp * 1000).toLocaleDateString(locale, {
+/**
+ * Formats a UNIX (seconds) timestamp as a weekday + short date.
+ * Pass `timeZone` (e.g. "UTC") to format in a fixed zone; omit it to use the viewer's local zone.
+ */
+export const getFormattedDate = (timestamp: number, language: LanguageCodes, timeZone?: string): string => {
+  const options: Intl.DateTimeFormatOptions = {
     weekday: "long",
     month: "short",
     day: "numeric",
-    timeZone: "UTC",
-  });
+  };
+
+  if (timeZone) {
+    options.timeZone = timeZone;
+  }
+
+  return new Date(timestamp * 1000).toLocaleDateString(LOCALE_BY_LANGUAGE[language] ?? "en-US", options);
 };
 
 export const getCurrentLocation = (): Promise<LatLon> => {

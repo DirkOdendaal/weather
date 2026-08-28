@@ -20,7 +20,7 @@ const ForecastDay: FC<{
           <Icon className="text-primary" height={36} icon={getWeatherIcon(day.weather[0].icon)} width={36} />
         </div>
         <div>
-          <p className="font-medium">{getFormattedDate(day.dt, languageConfig.languageCode)}</p>
+          <p className="font-medium">{getFormattedDate(day.dt, languageConfig.languageCode, "UTC")}</p>
           <p className="text-sm text-foreground-500 capitalize">{day.weather[0].description}</p>
         </div>
       </div>
